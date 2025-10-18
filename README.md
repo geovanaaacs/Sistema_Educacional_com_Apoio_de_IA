@@ -59,8 +59,6 @@ Para executar este projeto localmente, siga os passos abaixo.
 | Geovana Carvalho dos Santos | G821912   |
 | Larissa de Oliveira Marangon Ramalho | T152674   |
 | Eduardo Hervatin de Oliveira | H780CB8   |
-| Pedro Oliveira de Andrade | H77JFI2   |
-| Nicolas Arcanjo da Silva | H695546   |
 
 ---
 _Este repositório foi desenvolvido como requisito parcial para a conclusão do Projeto Integrado Multidisciplinar II do curso de Tecnologia em Análise e Desenvolvimento de Sistemas do ICET - UNIP._
