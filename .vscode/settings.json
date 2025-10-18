@@ -1,0 +1,10 @@
+{
+    "auto-rename-tag.activationOnLanguage": [
+
+
+        "*"
+    ],
+    "C_Cpp.autocompleteAddParentheses": true,
+    "python.analysis.completeFunctionParens": true,
+    "C_Cpp.default.intelliSenseMode": ""
+}
