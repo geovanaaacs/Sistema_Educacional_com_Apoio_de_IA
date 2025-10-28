@@ -1,10 +1,13 @@
-import ctypes
 import customtkinter as ctk
+from pathlib import Path
 
-backend1 = ctypes.CDLL("./back-end/code.so")
-backend2 = ctypes.CDLL("./back-end/telaAluno.so")
-backend3 = ctypes.CDLL("./back-end/telaProfessor.so")
-
-ctk.set_appearance_mode("light")
-ctk.set_default_color_theme("blue")
+icon = ""
 interface = ctk.CTk()
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("blue")
+
+interface.title("Sistema Educacional com Apoio de IA")
+interface.iconbitmap()
+
+interface = ctk.CTk()
+interface.mainloop()
