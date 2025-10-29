@@ -1,0 +1,41 @@
+Cargo: Aluno
+Nome: Ana Santos
+Email: anasantos@gmail.com
+Turma: 1A
+Senha: SenhadaAna12
+
+Cargo: Aluno
+Nome: João Mendes
+Email: joaomendes@hotmail.com
+Turma: 2B
+Senha: SenhaJoaozinho123
+
+Cargo: Docente
+Nome: João Paulo Daniel
+Email: joaopaulo@gmail.com
+Turma: 2B
+Senha: SenhadoJoaoPaulao
+
+Cargo: Docente
+Nome: Paula Maria Silve
+Email: paulamaria@yahoo.com.br
+Turma: 1A
+Senha: sENHApAULAmARIAS123
+
+Cargo: Docente
+Nome: Márcia Aragão
+Email: marciaaragao234@gmail.com
+Turma: 3B
+Senha: SenhaMarciaAagao
+
+Cargo: Aluno
+Nome: Cauã Junior
+Email: cauajunior@hotmail.com
+Turma: 1A
+Senha: Cauazinho@8394
+
+Cargo: Secretaria
+Nome: Ana J�lia Alves
+Email: anajulia@escola.com.br
+Senha: SenhaAnaJulia@escola
+

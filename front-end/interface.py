@@ -37,12 +37,26 @@ def homepage(interface):
     
     checkbox_show_password = ctk.CTkCheckBox(master=frame_login, text="Mostrar senha", checkbox_width=18, checkbox_height=18, command=lambda: show_password_button(checkbox_show_password, login_password))
     checkbox_show_password.pack(pady=(0, 10), padx=5, anchor="w")
-    
-    button_login = ctk.CTkButton(master=frame_login, text="Entrar", width=200)
+
+    def handle_login():
+        email = login_email.get()
+        password = login_password.get()
+
+        if verify_login_data(email, password):
+            msgbox.showinfo("Login Aprovado", "Login realizado com sucesso!")
+            
+            # TODO: Aqui você chamaria a função da próxima tela
+            # ex: show_dashboard(interface)
+            
+        else:
+            msgbox.showerror("Login Falhou", "Email ou senha incorretos.")
+
+    button_login = ctk.CTkButton(master=frame_login, text="Entrar", width=200, command=handle_login) 
     button_login.pack(pady=10)
     
     button_not_registered = ctk.CTkButton(master=frame_login, text="Não tenho cadastro",command=msg_not_registered, font=ctk.CTkFont(size=12), fg_color="transparent", hover_color="gray25")
     button_not_registered.pack(pady=0)
+    
         
 def show_password_button(checkbox, password_entry):
     if checkbox.get() == 1:
@@ -53,15 +67,30 @@ def show_password_button(checkbox, password_entry):
 def msg_not_registered():
     msgbox.showinfo(title="Cadastro Pendente", message="Para fazer seu cadastro, por favor, entre em contato com a secretaria da escola.")
     
-def verify_login_data(email, password): # dar continuirdade depois
+def verify_login_data(email_attempt, password_attempt): 
     try:
-        with open("data/login_data.txt", "r") as file:
-            for line in file:
-                stored_email, stored_password = line.strip().split(",")
-                if email == stored_email and password == stored_password:
-                    return True
+        with open("dados_usuarios.txt", "r", encoding="utf-8") as file:
+            all_content = file.read()
+            user_records = all_content.strip().split('\n\n')
+            
+            for record_str in user_records:
+                user_data = {}
+                lines = record_str.split('\n')
                 
-    except:
+                for line in lines:
+                    if ": " in line:
+                        # Separa no primeiro ": " (ex: "Nome: Ana Santos")
+                        key, value = line.split(": ", 1)
+                        user_data[key.strip()] = value.strip()
+                        
+                    if (user_data.get('Email') == email_attempt and 
+                        user_data.get('Senha') == password_attempt):
+                        return True
+    except FileNotFoundError:
+        print("Erro: Arquivo 'dados_usuarios.txt' não encontrado.")
+        return False
+    except Exception as e:
+        print(f"Ocorreu um erro ao ler o arquivo: {e}")
         return False
 
 def main():
