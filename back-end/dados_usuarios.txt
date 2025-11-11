@@ -35,7 +35,8 @@ Turma: 1A
 Senha: Cauazinho@8394
 
 Cargo: Secretaria
-Nome: Ana J£lia Alves
+Nome: Ana Julia Alves
 Email: anajulia@escola.com.br
 Senha: SenhaAnaJulia@escola
 
+fabianarosa@escolaemail.com,SenhadaRosa,Secretaria,Fabiana Rosa

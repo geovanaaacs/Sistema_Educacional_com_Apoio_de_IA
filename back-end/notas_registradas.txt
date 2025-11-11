@@ -1,0 +1,24 @@
+Aluno: Cauã Junior
+Email: cauajunior@hotmail.com
+Turma: 1A
+Disciplina: Redes de Computadores
+Nota: 8,00
+
+Aluno: Ana Santos
+Email: anasantos@gmail.com
+Turma: 1A
+Disciplina: Redes de Computadores
+Nota: 7,00
+
+Aluno: João Mendes
+Email: joaomendes@hotmail.com
+Turma: 2B
+Disciplina: Redes de Computadores
+Nota: 7,000000
+
+Aluno: Ana Santos
+Email: anasantos@gmail.com
+Turma: 1A
+Disciplina: Redes de Computadores
+Nota: 6,570000
+

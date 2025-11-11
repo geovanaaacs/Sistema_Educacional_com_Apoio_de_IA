@@ -31,7 +31,7 @@ void obterSenhaEscondida(char *senha, int tamanho_max) {
 }
 
 void realizarCadastro(){
-    char nome[80], email[100], senha_digitada[32], turma[25], cargo_texto[20];
+    char nome[80], email[100], senha_digitada[32], turma[5], cargo_texto[20], disciplina[20];
     int tipo_usuario;
 
     printf("\n--- Novo Cadastro ---\n");
@@ -56,7 +56,7 @@ void realizarCadastro(){
             email[strcspn(email, "\n")] = '\0';
 
             printf("Digite a turma do %s: ", cargo_texto);
-            fgets(turma, 25, stdin);
+            fgets(turma, 5, stdin);
             turma[strcspn(turma, "\n")] = '\0';
             break;
 
@@ -71,8 +71,12 @@ void realizarCadastro(){
             email[strcspn(email, "\n")] = '\0';
 
             printf("Digite a turma do %s: ", cargo_texto);
-            fgets(turma, 25, stdin);
+            fgets(turma, 5, stdin);
             turma[strcspn(turma, "\n")] = '\0';
+
+            printf("Digite a disciplina do %s: ", cargo_texto);
+            fgets(disciplina, 20, stdin);
+            disciplina[strcspn(disciplina, "\n")] = '\0';
             break;
 
         case 3:
@@ -84,6 +88,7 @@ void realizarCadastro(){
             printf("Digite o email da %s: ", cargo_texto);
             fgets(email, 100, stdin);
             email[strcspn(email, "\n")] = '\0';
+            turma[0] = '\0';
             break;
 
         case 4:
@@ -95,6 +100,7 @@ void realizarCadastro(){
             printf("Digite o email do %s: ", cargo_texto);
             fgets(email, 100, stdin);
             email[strcspn(email, "\n")] = '\0';
+            turma[0] = '\0';
             break;
 
         default:
@@ -127,20 +133,144 @@ void realizarCadastro(){
     }
 }
 
+void registro_notas(void) {
+    char busca[100];
+    char linha[256];
+    char nome_aluno[100] = "";
+    char email_aluno[100] = "";
+    char turma[10] = "";
+    char cargo[20] = "";
+    char disciplina[50];
+    float nota;
+
+    printf("\n====================\n");
+    printf("REGISTRO DE NOTAS\n");
+    printf("====================\n");
+
+    printf("Digite parte do nome ou email do aluno: ");
+    fgets(busca, sizeof(busca), stdin);
+    busca[strcspn(busca, "\n")] = '\0'; // remove o \n
+
+    FILE *arquivo_usuarios = fopen("dados_usuarios.txt", "r");
+    if (arquivo_usuarios == NULL) {
+        perror("Erro ao abrir dados_usuarios.txt");
+        return;
+    }
+
+    int encontrado = 0;
+
+    while (fgets(linha, sizeof(linha), arquivo_usuarios)) {
+        if (strncmp(linha, "Cargo:", 6) == 0) {
+            sscanf(linha, "Cargo: %[^\n]", cargo);
+        } else if (strncmp(linha, "Nome:", 5) == 0) {
+            sscanf(linha, "Nome: %[^\n]", nome_aluno);
+        } else if (strncmp(linha, "Email:", 6) == 0) {
+            sscanf(linha, "Email: %[^\n]", email_aluno);
+        } else if (strncmp(linha, "Turma:", 6) == 0) {
+            sscanf(linha, "Turma: %[^\n]", turma);
+        } else if (linha[0] == '\n') {
+            if (strcmp(cargo, "Aluno") == 0 &&
+                (strstr(email_aluno, busca) || strstr(nome_aluno, busca))) {
+                encontrado = 1;
+                break;
+            }
+        }
+    }
+
+    fclose(arquivo_usuarios);
+
+    if (!encontrado) {
+        printf("\nAluno não encontrado!\n");
+        printf("\nPressione Enter para voltar ao menu...");
+        getchar();
+        return;
+    }
+
+    printf("\nAluno encontrado: %s\n", nome_aluno);
+    printf("Turma: %s\n", turma);
+
+    printf("Digite a disciplina: ");
+    fgets(disciplina, sizeof(disciplina), stdin);
+    disciplina[strcspn(disciplina, "\n")] = '\0';
+
+    printf("Digite a nota com vírgula: ");
+    scanf("%f", &nota);
+    while (getchar() != '\n');
+
+    FILE *arquivo_notas = fopen("notas_registradas.txt", "a");
+    if (arquivo_notas == NULL) {
+        perror("Erro ao abrir notas_registradas.txt");
+        return;
+    }
+
+    fprintf(arquivo_notas, "Aluno: %s\nEmail: %s\nTurma: %s\nDisciplina: %s\nNota: %.2f\n\n",
+            nome_aluno, email_aluno, turma, disciplina, nota);
+
+    fclose(arquivo_notas);
+
+    printf("\nNota registrada com sucesso!\n");
+}
+
+
+void incluir_atividade(void) {
+    char titulo_atividade[50];
+    char descricao_atividade[256];
+    char turma[10];
+    char disciplina[50];
+
+    printf("\n==============================\n");
+    printf(" CADASTRO DE NOVA ATIVIDADE\n");
+    printf("==============================\n");
+
+    printf("Digite o título da atividade: ");
+    fgets(titulo_atividade, sizeof(titulo_atividade), stdin);
+    titulo_atividade[strcspn(titulo_atividade, "\n")] = '\0'; // remover \n
+
+    printf("Digite a turma: ");
+    fgets(turma, sizeof(turma), stdin);
+    turma[strcspn(turma, "\n")] = '\0';
+
+    printf("Digite a disciplina: ");
+    fgets(disciplina, sizeof(disciplina), stdin);
+    disciplina[strcspn(disciplina, "\n")] = '\0';
+
+    printf("Digite a descrição da atividade: ");
+    fgets(descricao_atividade, sizeof(descricao_atividade), stdin);
+    descricao_atividade[strcspn(descricao_atividade, "\n")] = '\0';
+
+    FILE *arquivo_atividade = fopen("dados_atividades.txt", "a");
+    if (arquivo_atividade == NULL) {
+        perror("Erro ao abrir dados_atividades.txt");
+        return;
+    }
+
+    fprintf(arquivo_atividade, "%s,%s,%s,%s\n",
+            titulo_atividade,
+            turma,
+            disciplina,
+            descricao_atividade);
+
+    fclose(arquivo_atividade);
+
+    printf("\nAtividade cadastrada com sucesso!\n");
+    printf("Título: %s\nTurma: %s\nDisciplina: %s\n", titulo_atividade, turma, disciplina);
+}
+
 void fazer_login(void){
     char email_digitado[100];
     char senha_digitada[32];
 
-    puts("=======================================");
-    puts("REALIZAR LOGIN ANTES DE INSERIR A NOTA");
-    puts("=======================================");
+    puts("====================================================");
+    puts("REALIZAR LOGIN ANTES DE INSERIR A NOTA OU ATIVIDADE");
+    puts("====================================================");
 
-    printf("Digeite seu email: %s", email_digitado);
+    printf("Digite seu email: %s", email_digitado);
     scanf("%99s", &email_digitado);
 
     while (getchar() != '\n');
-        printf("Digeite seu email: %s", senha_digitada);
+        printf("Digite sua senha: %s", senha_digitada);
         obterSenhaEscondida(senha_digitada, 32);
+        // VER PORQUE ESTÁ ESCREVENDO CARACTERES ESTRANHOS ANTES DE COLOCAR SENHA
 
     FILE *arquivo_usuario = fopen("dados_usuarios.txt", "r");
     if (arquivo_usuario == NULL){
@@ -176,20 +306,20 @@ void fazer_login(void){
                 strcpy(email_bloco_atual, valor);
             } else if (strcmp(chave, "Senha") == 0) {
                 strcpy(senha_bloco_atual, valor);
-            } else if (strcpy(chave, "Cargo")== 0){
+            } else if (strcmp(chave, "Cargo")== 0){
                 strcpy(cargo_bloco_atual, valor);
             }
         }
     }
 
-    if (login_sucesso == 0) {
+    fclose(arquivo_usuario);
+
+    if (login_sucesso == 1) {
         if (strcmp(email_digitado, email_bloco_atual) == 0 &&
             strcmp(senha_digitada, senha_bloco_atual) == 0){
             login_sucesso = 1;
             strcpy(cargo_LOGADO, cargo_bloco_atual);
         }
-
-    fclose(arquivo_usuario);
 
     if (login_sucesso == 1){
         printf("\nLogin realizado com sucesso! (Cargo: %s)\n", cargo_LOGADO);
@@ -203,15 +333,16 @@ void fazer_login(void){
                 if (scanf("%d", &opcao_sub_menu) != 1) {
                     printf("Entrada inválida. Digite um número.\n");
                     while (getchar() != '\n');
-                } else {
-                    while (getchar() != '\n');
-                        if (opcao_sub_menu == 1){
-                            registro_notas();
-                        } else if (opcao_sub_menu == 2){
-                            incluir_atividade();
-                        } else {
-                            printf("Opção inválida. Escolha 1 ou 2.\n");
-                        }
+                    return;
+                }
+                while (getchar() != '\n');
+                    if (opcao_sub_menu == 1){
+                        registro_notas();
+                    } else if (opcao_sub_menu == 2){
+                        incluir_atividade();
+                    } else {
+                        printf("Opção inválida. Escolha 1 ou 2.\n");
+                    }
                 }
             } else {
                 printf("\nAcesso negado. Esta função é reservada para Docentes e Admin.\n");
