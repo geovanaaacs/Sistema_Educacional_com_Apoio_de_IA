@@ -2,23 +2,29 @@ Aluno: Cauã Junior
 Email: cauajunior@hotmail.com
 Turma: 1A
 Disciplina: Redes de Computadores
-Nota: 8,00
+Nota: 8,0
 
 Aluno: Ana Santos
 Email: anasantos@gmail.com
 Turma: 1A
 Disciplina: Redes de Computadores
-Nota: 7,00
+Nota: 7,0
 
 Aluno: João Mendes
 Email: joaomendes@hotmail.com
 Turma: 2B
 Disciplina: Redes de Computadores
-Nota: 7,000000
+Nota: 8,5
+
+Aluno: João Mendes
+Email: joaomendes@hotmail.com
+Turma: 2B
+Disciplina: Lógica de Programação e Algorítimos
+Nota: 7,0
 
 Aluno: Ana Santos
 Email: anasantos@gmail.com
 Turma: 1A
-Disciplina: Redes de Computadores
-Nota: 6,570000
+Disciplina: Lógica de Programação e Algorítimos
+Nota: 6,5
 

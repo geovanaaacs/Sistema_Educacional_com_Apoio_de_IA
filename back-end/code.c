@@ -113,17 +113,17 @@ void realizarCadastro(){
 
     FILE *arquivo_usuario = fopen("dados_usuarios.txt", "a");
     if (arquivo_usuario != NULL) {
-        fprintf(arquivo_usuario, "%s,%s,%s,%s",
-                email,
-                senha_digitada,
+        fprintf(arquivo_usuario, "Cargo: %s\nNome: %s\nEmail: %s\nTurma: %s\n",
                 cargo_texto,
-                nome);
+                nome,
+                email,
+                turma);
 
-        if (tipo_usuario == 1 || tipo_usuario == 2) {
-            fprintf(arquivo_usuario, ",%s", turma);
+        if (tipo_usuario == 2) {
+            fprintf(arquivo_usuario, "Disciplina: %s\n", disciplina);
         }
 
-        fprintf(arquivo_usuario, "\n");
+        fprintf(arquivo_usuario, "Senha: %s\n\n", senha_digitada);
 
         fclose(arquivo_usuario);
         printf("\nUsuário cadastrado com sucesso!\n");

@@ -94,7 +94,7 @@ def verify_login_data(email_attempt, password_attempt):
         msgbox.showerror("Erro", f"Arquivo '{user_data_path}' não encontrado.")
         return None
     except Exception as e:
-        msgbox.showerror("Erro", f"Ocorreu um problema ao ler os dados: {e}")
+        msgbox.showerror("Erro", f"Erro ao verificar login: {str(e)}")
         return None
 
 def login_success(interface, user_data):
@@ -106,6 +106,7 @@ def login_success(interface, user_data):
     interface.geometry("1000x700")
     
     notas = []
+    nome_aluno = user_data.get('Nome', '')
     try:
         with open(notes_data_path, "r", encoding="utf-8") as file:
                 dados = {}
@@ -122,15 +123,26 @@ def login_success(interface, user_data):
                 if dados:
                     notas.append(dados)
                 
+                # Filtrar notas: alunos veem apenas suas notas, professores veem todas
+                if user_data.get('Cargo') == 'Aluno':
+                    notas = [n for n in notas if n.get('Aluno') == nome_aluno]
+                
                 for n in notas:
                     if "Nota" in n:
                         try:
-                            n["Nota"] = f"{float(n['Nota']):.2f}"
+                            valor = n["Nota"].replace(",", ".")
+                            try:
+                                n["Nota"] = f"{float(valor):.1f}"
+                            except:
+                                pass
+
                         except ValueError:
                             pass
                         
     except FileNotFoundError:
-        msgbox.showwarning(f"⚠️ Arquivo '{notes_data_path}' não encontrado. Exibindo painel vazio.")
+        msgbox.showwarning("Aviso", "Arquivo de notas nao encontrado. Exibindo painel vazio.")
+    except Exception as e:
+        msgbox.showerror("Erro", f"Erro ao ler notas: {str(e)}")
             
     # Frame principal
     main_frame = ctk.CTkFrame(interface)
@@ -151,16 +163,58 @@ def login_success(interface, user_data):
         busca_frame = ctk.CTkFrame(frame_notas, fg_color="transparent")
         busca_frame.pack(pady=5)
 
-        entry_busca = ctk.CTkEntry(busca_frame, placeholder_text="Buscar por nome ou turma...", width=250)
-        entry_busca.pack(side="left", padx=5)
+        ctk.CTkLabel(busca_frame, text="Filtrar por:", font=ctk.CTkFont(size=11)).pack(side="left", padx=5)
+        
+        entry_turma = ctk.CTkEntry(busca_frame, placeholder_text="Turma", width=80)
+        entry_turma.pack(side="left", padx=5)
 
-        botao_busca = ctk.CTkButton(busca_frame, text="Filtrar", width=100)
+        entry_disciplina = ctk.CTkEntry(busca_frame, placeholder_text="Disciplina", width=100)
+        entry_disciplina.pack(side="left", padx=5)
+
+        def aplicar_filtro():
+            turma_filtro = entry_turma.get().strip().lower()
+            disciplina_filtro = entry_disciplina.get().strip().lower()
+            
+            # Limpar tabela
+            for item in tabela_notas.get_children():
+                tabela_notas.delete(item)
+            
+            # Recarregar com filtro
+            for n in notas:
+                turma_nota = n.get('Turma', '').lower()
+                disciplina_nota = n.get('Disciplina', '').lower()
+                
+                # Professores só veem notas da sua turma e disciplina
+                prof_turma = user_data.get('Turma', '').lower()
+                prof_disciplina = user_data.get('Disciplina', '').lower()
+                
+                turma_ok = not turma_filtro or turma_nota == turma_filtro
+                disciplina_ok = not disciplina_filtro or disciplina_nota == disciplina_filtro
+                acesso_ok = turma_nota == prof_turma and disciplina_nota == prof_disciplina
+                
+                if turma_ok and disciplina_ok and acesso_ok:
+                    tabela_notas.insert("", "end", values=(n.get("Aluno", ""), n.get("Turma", ""), n.get("Disciplina", ""), n.get("Nota", "")))
+
+        botao_busca = ctk.CTkButton(busca_frame, text="Filtrar", width=80, command=aplicar_filtro)
         botao_busca.pack(side="left", padx=5)
 
     tabela_notas = ttk.Treeview(frame_notas, columns=("Aluno", "Turma", "Disciplina", "Nota"), show="headings")
     
+    # Inserir notas respeitando filtro de professor
+    prof_turma = user_data.get('Turma', '').lower() if user_data.get('Cargo') != 'Aluno' else None
+    prof_disciplina = user_data.get('Disciplina', '').lower() if user_data.get('Cargo') != 'Aluno' else None
+    
     for n in notas:
-        tabela_notas.insert("", "end", values=(n["Aluno"], n["Turma"], n["Disciplina"], n["Nota"]))
+        # Se for professor, verificar se a nota é da sua turma/disciplina
+        if user_data.get('Cargo') != 'Aluno':
+            disciplina_nota = n.get('Disciplina', '').strip().lower()
+            prof_disciplina = user_data.get('Disciplina', '').strip().lower()
+            
+            # Mostrar apenas notas que correspondem À DISCIPLINA do professor (em qualquer turma)
+            if disciplina_nota != prof_disciplina:
+                continue
+            
+        tabela_notas.insert("", "end", values=(n.get("Aluno", ""), n.get("Turma", ""), n.get("Disciplina", ""), n.get("Nota", "")))
     tabela_notas.pack(fill="both", expand=True, padx=10, pady=10)         
     
     for col in ("Aluno", "Turma", "Disciplina", "Nota"):
@@ -192,10 +246,10 @@ def login_success(interface, user_data):
                     })
                     
     except FileNotFoundError:
-        msgbox.showwarning(f"⚠️ Arquivo '{activities_data_path}' não encontrado. Exibindo painel vazio.")
+        msgbox.showwarning("Aviso", "Arquivo de atividades nao encontrado. Exibindo painel vazio.")
         
     except Exception as e:
-        msgbox.showwarning(f"⚠️ Erro ao ler atividades: {e}")
+        msgbox.showerror("Erro", f"Erro ao ler atividades: {str(e)}")
         
     if atividades:
         for a in atividades:

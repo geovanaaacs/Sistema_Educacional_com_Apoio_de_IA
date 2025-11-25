@@ -14,19 +14,15 @@ Cargo: Docente
 Nome: João Paulo Daniel
 Email: joaopaulo@gmail.com
 Turma: 2B
+Disciplina: Redes de Computadores
 Senha: SenhadoJoaoPaulao
 
 Cargo: Docente
 Nome: Paula Maria Silve
 Email: paulamaria@yahoo.com.br
 Turma: 1A
+Disciplina: Lógica de Programação e Algorítimos
 Senha: sENHApAULAmARIAS123
-
-Cargo: Docente
-Nome: Márcia Aragão
-Email: marciaaragao234@gmail.com
-Turma: 3B
-Senha: SenhaMarciaAagao
 
 Cargo: Aluno
 Nome: Cauã Junior
